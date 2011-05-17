@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.virginia.lib.ole.akubra</groupId>
@@ -14,7 +13,8 @@
 			<email>ajs6f@virginia.edu</email>
 			<organization>the University of Virginia Library</organization>
 			<organizationUrl>http://www.lib.virginia.edu</organizationUrl>
-			<roles> </roles>
+			<roles>
+			</roles>
 		</developer>
 	</developers>
 	<repositories>
@@ -89,15 +89,23 @@
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-							<mainClass>edu.virginia.lib.ole.akubra.utilities.FSBlobStoreSplitter</mainClass>							
+							<mainClass>edu.virginia.lib.ole.akubra.utilities.FSBlobStoreSplitter</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
-            				<descriptorRef>jar-with-dependencies</descriptorRef>
-       				</descriptorRefs>		
-				</configuration>		
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
 			</plugin>
-		</plugins>		
+			<plugin>
+				<artifactId>maven-compile-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
-	
+
 </project>
