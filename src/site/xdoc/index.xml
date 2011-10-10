@@ -1,0 +1,17 @@
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <head>
+        <title>TwoStore</title>
+    </head>
+    <body>
+        <section name="introduction">
+            <p>
+                TwoStore is a Akubra implementation that multiplexes BlobStores into a binary tree of storage.
+            </p>
+            <p>
+                TwoStore operates over multiple filesystems and is agnostic as to how those filesystems are assembled and mounted to repository servers. 
+            </p>
+        </section>
+    </body>
+</document>

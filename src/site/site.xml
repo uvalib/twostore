@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="TwoStore" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+    <version position="left"/>
+    <bannerLeft>
+        <name>TwoStore</name>
+        <src></src>
+        <href>https://github.com/uvalib/twostore</href>
+    </bannerLeft>
+    <bannerRight>
+        <src>http://www2.lib.virginia.edu/images/globalHd/library_logo_stacked.png</src>
+    </bannerRight>
+    <body>
+        <links>
+            <item name="Fedora" href="http://fedoracommons.org/"/>
+            <item name="Akubra" href="https://wiki.duraspace.org/display/AKUBRA/Akubra+Project"/>
+            <item name="UVa Library" href="http://www.lib.virginia.edu"/>            
+        </links>
+
+        <menu name="TwoStore">
+            <item name="Introduction" href="index.html"/>
+            <item name="Download" href="download.html"/>
+            <item name="Release Notes" href="release-notes.html"/>
+            <item name="General Information" href="about.html"/>
+            <item name="Road Map" href="roadmap.html"/>
+        </menu>
+
+        <menu ref="reports"/>
+
+    </body>
+</project>
