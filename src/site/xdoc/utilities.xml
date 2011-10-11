@@ -11,7 +11,7 @@
             </p>
             <p>Execute it with</p>
             <source>
-                java -jar target/TwoStore-1.0-jar-with-dependencies.jar
+java -jar target/TwoStore-1.0-jar-with-dependencies.jar
             </source>
             <p>and the following parameters:</p>
             <source>
