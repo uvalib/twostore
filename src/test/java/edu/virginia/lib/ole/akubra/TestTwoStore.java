@@ -22,10 +22,12 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Strings;
 import com.google.common.io.Files;
 
 public class TestTwoStore {
 	
+	private String testURIinfix = "uva-lib:";
 	private String teststring = "If they can get you asking the wrong questions, they don't have to worry about answers.";
 	
 	private Logger log = LoggerFactory.getLogger(TestTwoStore.class);
@@ -64,8 +66,17 @@ public class TestTwoStore {
 	}
 	
 	@Test(dependsOnGroups = { "init" })
-	public void testStoreBlob() throws UnsupportedOperationException, IOException, URISyntaxException {
-		URI testuri = new URI("testURI");
+	public void testStoreBlobs() throws UnsupportedOperationException, IOException, URISyntaxException {
+		String testURI,testdata;
+		for (Integer i = 0 ; i < 101; i++) {
+			testURI = ((i % 2 == 0) ? "A" : "B") + testURIinfix + i;
+			testdata = i.toString() + Strings.repeat(testURIinfix, i) + i;
+			storeOneBlob(testURI, testdata);	
+		}
+	}
+	
+	private void storeOneBlob(String testuristring, String teststring) throws UnsupportedOperationException, IOException, URISyntaxException {	
+		URI testuri = new URI(testuristring);
 		log.debug("Test URI: " + testuri.toString());
 		URI testencuri = bitstringmapper.getInternalId(testuri);
 		log.debug("Test encoded URI: "+ testencuri);
