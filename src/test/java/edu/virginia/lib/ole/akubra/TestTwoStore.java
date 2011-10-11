@@ -9,10 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.common.io.Files;
 
 import org.akubraproject.Blob;
 import org.akubraproject.BlobStore;
@@ -26,9 +22,11 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.io.Files;
+
 public class TestTwoStore {
 	
-	private String teststring = "If they can get you asking the wrong questions, they don’t have to worry about answers.";
+	private String teststring = "If they can get you asking the wrong questions, they don't have to worry about answers.";
 	
 	private Logger log = LoggerFactory.getLogger(TestTwoStore.class);
 
