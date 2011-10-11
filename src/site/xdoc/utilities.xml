@@ -1,0 +1,28 @@
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <head>
+        <title>Utilities</title>
+    </head>
+    <body>
+        <section name="Utilities">
+            <p>
+                TwoStore comes packaged with a utility to split an FSBlobStore into two. The purpose of this tool is to allow you to migrate a storage configuration into a new configuration with one of the leaf nodes of your store-tree made into a parent node with the two new FSBlobStores as children. This allows you to insert a <a href="/twostore/apidocs/edu/virginia/lib/ole/akubra/TwoStore.html">TwoStore</a> above them and thus expand your tree.
+            </p>
+            <p>Execute it with</p>
+            <source>
+                java -jar target/TwoStore-1.0-jar-with-dependencies.jar
+            </source>
+            <p>and the following parameters:</p>
+            <source>
+         <![CDATA[ 
+-h,--help             Get this help
+-l,--left <arg>       Left-hand output BlobStore filepath (required)
+-o,--original <arg>   Original (input) BlobStore filepath (required)
+-r,--right <arg>      Right-hand output BlobStore filepath (required)
+         ]]>
+            </source>
+            <p>This utility does not write to the original FSBlobStores, so it may be used while a repository is in operation. Of course, switching to the new configuration will require a repository restart.</p>
+        </section>
+    </body>
+</document>
