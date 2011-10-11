@@ -21,21 +21,26 @@ import com.google.common.collect.Iterators;
 
 /**
  * @author ajs6f
- * 
+ * @version 1.0 
  */
 public class TwoStoreConnection extends AbstractBlobStoreConnection {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(TwoStoreConnection.class);
 
+	/**
+	 * {@link org.akubraproject.BlobStore} to which this connection belongs
+	 */
 	private TwoStore myowner;
+	
+	/**
+	 * a {@link org.akubraproject.BlobStoreConnection} for each side of the {@link TwoStore}
+	 */
 	private BlobStoreConnection right, left;
 
 	/**
-	 * @param owner
-	 * @param left
-	 * @param right
-	 * @param hints
+	 * @param owner {@link org.akubraproject.BlobStore} to which this connection belongs
+	 * @param hints {@link Map} of hints for this connection which will be passed on to each side
 	 * @throws IOException
 	 * @throws UnsupportedOperationException
 	 */
@@ -49,7 +54,7 @@ public class TwoStoreConnection extends AbstractBlobStoreConnection {
 	}
 
 	/**
-	 * @param owner
+	 * @param owner {@link org.akubraproject.BlobStore} to which this connection belongs
 	 * @param streamManager
 	 * @throws IOException
 	 * @throws UnsupportedOperationException
@@ -62,11 +67,8 @@ public class TwoStoreConnection extends AbstractBlobStoreConnection {
 		this.right = myowner.getRight().openConnection(null, null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.akubraproject.BlobStoreConnection#getBlob(java.net.URI,
-	 * java.util.Map)
+	/** 
+	 * @see org.akubraproject.BlobStoreConnection#getBlob(java.net.URI, java.util.Map)
 	 */
 	public Blob getBlob(URI blobId, Map<String, String> hints)
 			throws IOException, UnsupportedIdException,
@@ -91,10 +93,8 @@ public class TwoStoreConnection extends AbstractBlobStoreConnection {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.akubraproject.BlobStoreConnection#listBlobIds(java.lang.String)
+	/**
+	 *  @see org.akubraproject.BlobStoreConnection#listBlobIds(java.lang.String)
 	 */
 	public Iterator<URI> listBlobIds(String filterPrefix) throws IOException {
 		Iterator<URI> leftiter = left.listBlobIds(filterPrefix);
@@ -102,9 +102,7 @@ public class TwoStoreConnection extends AbstractBlobStoreConnection {
 		return Iterators.concat(leftiter, rightiter);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.akubraproject.BlobStoreConnection#sync()
 	 */
 	public void sync() throws IOException, UnsupportedOperationException {
@@ -116,6 +114,7 @@ public class TwoStoreConnection extends AbstractBlobStoreConnection {
 	public void close() {
 		left.close();
 		right.close();
+		closed = true;
 	}
 
 }
