@@ -7,9 +7,10 @@
     <body>
         <section name="Usage">
             <p>
-                TwoStore, like any Akubra system, is easily configured with Spring. Below is an example of Spring XML configuration. Please notice the use of the <source>BitStringMapper</source> before all <source>TwoStore</source>s and the way that our <source>TwoStore</source> instance multiplexes two other <source>BlobStore</source>s. Those are the two key components of the <source>TwoStore</source> approach.
+                TwoStore, like any Akubra system, is easily configured with Spring. Below is an example of Spring XML configuration. Please notice the use of the <a href="/twostore/apidocs/edu/virginia/lib/ole/akubra/BitStringMapper.html">BitStringMapper</a> before all <a href="/twostore/apidocs/edu/virginia/lib/ole/akubra/TwoStore.html">TwoStore</a>s and the way that our TwoStore instance multiplexes two other BlobStores. Those are the two key components of the TwoStore approach.
             </p>
             <source>
+                <![CDATA[ 
                 <beans xmlns="http://www.springframework.org/schema/beans"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
@@ -165,6 +166,7 @@
                     </bean>
                     
                 </beans>
+                ]]>
             </source>
             
         </section>
