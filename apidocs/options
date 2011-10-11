@@ -17,11 +17,11 @@
 -doctitle
 'BlobStore to multiplex two stores. 1.0 API'
 -link
-'http://www.slf4j.org/apidocs'
--link
 'http://commons.apache.org/cli/apidocs'
 -link
 'http://commons.apache.org/io/apidocs'
+-link
+'http://www.slf4j.org/apidocs'
 -linkoffline
 'http://download.oracle.com/javase/6/docs/api' '/usr/share/tomcat6/.jenkins/jobs/Repository_Infrastructure---Storage---TwoStore/workspace/target/javadoc-bundle-options'
 -use
