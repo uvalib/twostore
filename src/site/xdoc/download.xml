@@ -7,7 +7,7 @@
     <body>
         <section name="Download">
             <p>
-                TwoStore is available from <a href="http://www.github.com">Github</a>, either as <a href="http://github.com/uvalib/twostore">source code</a> or as a <a href="http://github.com/downloads/uvalib/twostore/TwoStore-1.0.jar">built artifact</a>.
+                TwoStore is available from <a href="http://www.github.com">Github</a>, either as <a href="http://github.com/uvalib/twostore">source code</a>, as a <a href="http://github.com/downloads/uvalib/twostore/TwoStore-1.0.jar">built artifact</a>, or as a combination <a href="https://github.com/downloads/uvalib/twostore/TwoStore-1.0-jar-with-dependencies.jar">built artifact / utility jar</a>.
             </p>
         </section>
     </body>
