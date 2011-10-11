@@ -128,10 +128,13 @@
     
         <div class="section"><h2>introduction<a name="introduction"></a></h2>
             <p>
-                TwoStore is a Akubra implementation that multiplexes BlobStores into a binary tree of storage.
+                TwoStore is designed for repositories that have outgrown the default storage configuration that is shipped with Fedora, but which do not yet require the extensive machinery of gridded or cloud-based storage.
             </p>
             <p>
-                TwoStore operates over multiple filesystems and is agnostic as to how those filesystems are assembled and mounted to repository servers. 
+                It's based on a simple Adler32-based hash and TwoStore, a special Akubra BlobStore that acts as a binary switch between two other BlobStores. TwoStores are used to assemble other BlobStores into a manually-balanced binary tree of stores.
+            </p>
+            <p>
+                One of the attractive qualities of TwoStore implementations is that growth in the tree of stores causes more of the hash to be consumed to traverse that same in-memory tree, and not consumed inside a persisting store, where seeking operations are typically much more expensive.
             </p>
         </div>
     
