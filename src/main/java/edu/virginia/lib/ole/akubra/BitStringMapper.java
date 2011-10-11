@@ -15,16 +15,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author ajs6f
- * 
+ * @version 1.0
+ * @see org.akubraproject.map.IdMapper
  */
 public class BitStringMapper implements IdMapper {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(BitStringMapper.class);
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.akubraproject.map.IdMapper#getExternalId(java.net.URI)
 	 */
 	public URI getExternalId(URI internalId) throws NullPointerException {
@@ -40,9 +39,7 @@ public class BitStringMapper implements IdMapper {
 		return URI.create(uri);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.akubraproject.map.IdMapper#getInternalId(java.net.URI)
 	 */
 	public URI getInternalId(URI externalId) throws NullPointerException {
@@ -68,17 +65,21 @@ public class BitStringMapper implements IdMapper {
 		return URI.create(String.valueOf(uristring));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * @param externalPrefix ignored
+	 * @return always returns empty string, since there is no defined prefix for this mapper
 	 * @see org.akubraproject.map.IdMapper#getInternalPrefix(java.lang.String)
 	 */
 	public String getInternalPrefix(String externalPrefix)
 			throws NullPointerException {
-		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 	
+	/**
+	 * @param {@link String} characters
+	 * @return {@link Long} Adler32 hash of input
+	 * @see Adler32
+	 */
 	private Long hash(String characters) {
 		Adler32 hasher = new Adler32();
 		hasher.reset();
