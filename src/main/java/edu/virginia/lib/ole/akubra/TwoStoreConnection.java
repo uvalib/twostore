@@ -7,6 +7,7 @@ package edu.virginia.lib.ole.akubra;
 import static com.google.common.collect.Iterators.concat;
 import static edu.virginia.lib.ole.akubra.Constants.CHUNK;
 import static java.lang.Short.parseShort;
+import static java.net.URI.create;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
@@ -17,7 +18,6 @@ import java.util.Map;
 import org.akubraproject.Blob;
 import org.akubraproject.BlobStore;
 import org.akubraproject.BlobStoreConnection;
-import org.akubraproject.UnsupportedIdException;
 import org.akubraproject.impl.AbstractBlobStoreConnection;
 import org.akubraproject.impl.StreamManager;
 import org.slf4j.Logger;
@@ -41,14 +41,12 @@ public class TwoStoreConnection extends AbstractBlobStoreConnection {
     private final BlobStoreConnection right, left;
 
     /**
-     * @param owner {@link org.akubraproject.BlobStore} to which this connection belongs
+     * @param p {@link org.akubraproject.BlobStore} to which this connection belongs
      * @param hints {@link Map} of hints for this connection which will be passed on to each side
      * @throws IOException
-     * @throws UnsupportedOperationException
      */
 
-    public TwoStoreConnection(final BlobStore p, final Map<String, String> hints)
-            throws UnsupportedOperationException, IOException {
+    public TwoStoreConnection(final BlobStore p, final Map<String, String> hints) throws IOException {
         super(p);
         this.parent = (TwoStore) p;
         this.left = parent.getLeft().openConnection(null, hints);
@@ -56,13 +54,11 @@ public class TwoStoreConnection extends AbstractBlobStoreConnection {
     }
 
     /**
-     * @param owner {@link org.akubraproject.BlobStore} to which this connection belongs
+     * @param p {@link org.akubraproject.BlobStore} to which this connection belongs
      * @param streamManager
      * @throws IOException
-     * @throws UnsupportedOperationException
      */
-    public TwoStoreConnection(final BlobStore p, final StreamManager streamManager)
-            throws UnsupportedOperationException, IOException {
+    public TwoStoreConnection(final BlobStore p, final StreamManager streamManager) throws IOException {
         super(p, streamManager);
         this.parent = (TwoStore) p;
         this.left = parent.getLeft().openConnection(null, null);
@@ -73,17 +69,15 @@ public class TwoStoreConnection extends AbstractBlobStoreConnection {
      * @see org.akubraproject.BlobStoreConnection#getBlob(java.net.URI, java.util.Map)
      */
     @Override
-    public Blob getBlob(final URI blobId, final Map<String, String> hints)
-            throws IOException, UnsupportedIdException,
-            UnsupportedOperationException {
+    public Blob getBlob(final URI blobId, final Map<String, String> hints) throws IOException {
         log.trace("Entering TwoStoreConnection.getBlob()");
         final String blobIdString = blobId.toString();
         log.trace("Using blobIdString: " + blobIdString);
         final String newBlobIdString = blobIdString.substring(CHUNK + 1);
         log.trace("Using newBlobIdString: " + newBlobIdString);
-        final short front = parseShort((blobIdString.substring(0, CHUNK)),2);
+        final short front = parseShort(blobIdString.substring(0, CHUNK), 2);
         log.trace("Using front: " + front);
-        final URI newBlobId = URI.create(newBlobIdString);
+        final URI newBlobId = create(newBlobIdString);
 
         if (front % 2 == 0) {
             log.trace("Exiting TwoStoreConnection.getBlob() to the left");
@@ -105,16 +99,18 @@ public class TwoStoreConnection extends AbstractBlobStoreConnection {
      * @see org.akubraproject.BlobStoreConnection#sync()
      */
     @Override
-    public void sync() throws IOException, UnsupportedOperationException {
+    public void sync() throws IOException {
         left.sync();
         right.sync();
     }
 
     @Override
     public void close() {
-        left.close();
-        right.close();
-        closed = true;
+        if (!closed) {
+            left.close();
+            right.close();
+            closed = true;
+        }
     }
 
 }
