@@ -1,5 +1,7 @@
 package edu.virginia.lib.ole.akubra;
 
+import static com.google.common.base.Strings.repeat;
+import static org.slf4j.LoggerFactory.getLogger;
 import static org.testng.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
@@ -18,32 +20,30 @@ import org.akubraproject.map.IdMapper;
 import org.akubraproject.map.IdMappingBlobStore;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Strings;
 import com.google.common.io.Files;
 
 public class TestTwoStore {
 	
-	private String testURIinfix = "uva-lib:";
-	private String teststring = "If they can get you asking the wrong questions, they don't have to worry about answers.";
+	private static final String testURIinfix = "uva-lib:";
+	private static final String teststring = "If they can get you asking the wrong questions, they don't have to worry about answers.";
 	
-	private Logger log = LoggerFactory.getLogger(TestTwoStore.class);
+	private static final Logger log = getLogger(TestTwoStore.class);
 
 	private BlobStore right,left;
 	private TwoStore teststore;
-	private IdMapper bitstringmapper = new BitStringMapper();
-	private IdMapper filemapper = new FilePrefixMapper();
+	private final IdMapper bitstringmapper = new BitStringMapper();
+	private final IdMapper filemapper = new FilePrefixMapper();
 	
 	@BeforeClass
-	public void setUp() throws URISyntaxException, IOException {
-		File rightfile = Files.createTempDir();
-		BlobStore rightfilestore = new FSBlobStore(new URI("rightfile"), rightfile);
+	public void setUp() throws URISyntaxException {
+		final File rightfile = Files.createTempDir();
+		final BlobStore rightfilestore = new FSBlobStore(new URI("rightfile"), rightfile);
 		log.debug("Created temporary right-hand BlobStore in: " + rightfile.getAbsolutePath());
-		File leftfile = Files.createTempDir();
-		BlobStore leftfilestore = new FSBlobStore(new URI("leftfile"), leftfile);
+		final File leftfile = Files.createTempDir();
+		final BlobStore leftfilestore = new FSBlobStore(new URI("leftfile"), leftfile);
 		log.debug("Created temporary left-hand BlobStore in: " + leftfile.getAbsolutePath());
 		right = new IdMappingBlobStore(new URI("right"), rightfilestore,filemapper);
 		log.debug("Created new file-mapped BlobStore to the right.");
@@ -60,40 +60,41 @@ public class TestTwoStore {
 	}
 	
 	@Test(dependsOnGroups = { "init" })
-	public void testOpenConnection() throws URISyntaxException, UnsupportedOperationException, IOException {
-		BlobStoreConnection testconnection = teststore.openConnection(null, null);
+	public void testOpenConnection() throws UnsupportedOperationException, IOException {
+		final BlobStoreConnection testconnection = teststore.openConnection(null, null);
 		assertEquals(testconnection.getBlobStore(),teststore);
 	}
 	
 	@Test(dependsOnGroups = { "init" })
 	public void testStoreBlobs() throws UnsupportedOperationException, IOException, URISyntaxException {
 		String testURI,testdata;
-		for (Integer i = 0 ; i < 101; i++) {
+		for (int i = 0 ; i < 101; i++) {
 			testURI = ((i % 2 == 0) ? "A" : "B") + testURIinfix + i;
-			testdata = i.toString() + Strings.repeat(testURIinfix, i) + i;
+			testdata = i + repeat(testURIinfix, i) + i;
 			storeOneBlob(testURI, testdata);	
 		}
 	}
 	
-	private void storeOneBlob(String testuristring, String teststring) throws UnsupportedOperationException, IOException, URISyntaxException {	
-		URI testuri = new URI(testuristring);
+	private void storeOneBlob(final String testuristring, final String teststring) throws UnsupportedOperationException, IOException, URISyntaxException {	
+		final URI testuri = new URI(testuristring);
 		log.debug("Test URI: " + testuri.toString());
-		URI testencuri = bitstringmapper.getInternalId(testuri);
+		final URI testencuri = bitstringmapper.getInternalId(testuri);
 		log.debug("Test encoded URI: "+ testencuri);
-		InputStream testdata = new ByteArrayInputStream(teststring.getBytes("UTF-8"));
-		BlobStoreConnection testconnection = teststore.openConnection(null, null);
-		Blob testblob = testconnection.getBlob(testencuri, null);
+		final InputStream testdata = new ByteArrayInputStream(teststring.getBytes("UTF-8"));
+		final BlobStoreConnection testconnection = teststore.openConnection(null, null);
+		final Blob testblob = testconnection.getBlob(testencuri, null);
 		log.debug("Test blob created with internal URI: " + testblob.getId().toString());
-		OutputStream out  = testblob.openOutputStream(0, true);
-		IOUtils.copy(testdata, out);
+        try (final OutputStream out = testblob.openOutputStream(0, true)) {
+            IOUtils.copy(testdata, out);
+        }
 		log.debug("Stored '" + teststring + "' in that Blob.");
 		testconnection.close();
 		log.debug("Closed test connection.");
-		BlobStoreConnection newtestconnection = teststore.openConnection(null, null);
+		final BlobStoreConnection newtestconnection = teststore.openConnection(null, null);
 		log.debug("Opened new test connection.");
-		Blob newtestblob = newtestconnection.getBlob(testencuri, null);
+		final Blob newtestblob = newtestconnection.getBlob(testencuri, null);
 		log.debug("New test blob retrieved with internal URI: " + newtestblob.getId().toString());
-		String retrievedvalue = IOUtils.toString(newtestblob.openInputStream(), "UTF-8");
+		final String retrievedvalue = IOUtils.toString(newtestblob.openInputStream(), "UTF-8");
 		log.debug("Retrieved value: " + retrievedvalue);
 		assertEquals(teststring,retrievedvalue);
 	}

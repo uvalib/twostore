@@ -1,5 +1,7 @@
 package edu.virginia.lib.ole.akubra.utilities;
 
+import static java.util.concurrent.Executors.newFixedThreadPool;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +10,6 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.akubraproject.Blob;
 import org.akubraproject.BlobStore;
@@ -32,48 +33,48 @@ public class FSBlobStoreSplitter {
 
 	private class FSBlobStoreSplitterImpl {
 
-		private BlobStore original, left, right;
+		private final BlobStore original, left, right;
 
-		private ExecutorService threadpool = Executors.newFixedThreadPool(1);
+		private final ExecutorService threadpool = newFixedThreadPool(1);
 
 		private boolean clean = true;
 
-		public FSBlobStoreSplitterImpl(BlobStore original, BlobStore left,
-				BlobStore right) {
+		public FSBlobStoreSplitterImpl(final BlobStore original, final BlobStore left,
+				final BlobStore right) {
 			this.original = original;
 			this.left = left;
 			this.right = right;
 		}
 
 		public void split() throws UnsupportedOperationException, IOException {
-			BlobStoreConnection orig = original.openConnection(null, null);
-			BlobStoreConnection l = left.openConnection(null, null);
-			BlobStoreConnection r = right.openConnection(null, null);
+			final BlobStoreConnection orig = original.openConnection(null, null);
+			final BlobStoreConnection l = left.openConnection(null, null);
+			final BlobStoreConnection r = right.openConnection(null, null);
 			URI blobId = null;
-			Iterator<URI> blobList = orig.listBlobIds(null);
+			final Iterator<URI> blobList = orig.listBlobIds(null);
 			while (blobList.hasNext()) {
 				blobId = blobList.next();
 				print("Entering blobList.hasNext()");
 				// we use an URL decode here to account for some odd behavior
 				// from
 				// FSBlobStore FSBlobIdIterator
-				String blobIdString = URLDecoder.decode(blobId.toString(),
+				final String blobIdString = URLDecoder.decode(blobId.toString(),
 						"UTF-8");
 				print("Using blobIdString: " + blobIdString);
 				blobId = URI.create(blobIdString);
-				String newBlobIdString = blobIdString
+				final String newBlobIdString = blobIdString
 						.substring(Constants.CHUNK + 1);
 				print("Using newBlobIdString: " + newBlobIdString);
-				Short front = Short.parseShort(
+				final Short front = Short.parseShort(
 						(blobIdString.substring(0, Constants.CHUNK)), 2);
 				print("Using front: " + front);
-				URI newBlobId = URI.create(newBlobIdString);
+				final URI newBlobId = URI.create(newBlobIdString);
 
-				Blob inBlob = orig.getBlob(blobId, null);
+				final Blob inBlob = orig.getBlob(blobId, null);
 				if (front % 2 == 0) {
-					threadpool.execute(new copyBlob(inBlob, l, newBlobId));
+					threadpool.execute(new CopyBlob(inBlob, l, newBlobId));
 				} else {
-					threadpool.execute(new copyBlob(inBlob, r, newBlobId));
+					threadpool.execute(new CopyBlob(inBlob, r, newBlobId));
 				}
 				if (!clean) {
 					print("Failed to finish split!");
@@ -83,18 +84,19 @@ public class FSBlobStoreSplitter {
 			threadpool.shutdown();
 		}
 
-		private class copyBlob implements Runnable {
+		private class CopyBlob implements Runnable {
 			private final Blob inBlob;
 			private final BlobStoreConnection target;
 			private final URI newBlobId;
 
-			copyBlob(Blob inBlob, BlobStoreConnection target, URI newBlobId) {
+			CopyBlob(final Blob inBlob, final BlobStoreConnection target, final URI newBlobId) {
 				this.inBlob = inBlob;
 				this.target = target;
 				this.newBlobId = newBlobId;
 			}
 
-			public void run() {
+			@Override
+            public void run() {
 				print("Copying inBlob " + inBlob.getId() + " to target store "
 						+ target.getBlobStore().getId() + " under new URI "
 						+ newBlobId);
@@ -109,7 +111,7 @@ public class FSBlobStoreSplitter {
 					out = null;
 					in.close();
 					in = null;
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					clean = false;
 					e.printStackTrace();
 				}
@@ -118,14 +120,14 @@ public class FSBlobStoreSplitter {
 
 		}
 
-		private void print(String s) {
+		private void print(final String s) {
 			System.out.println(s);
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 
-		Options options = new Options();
+		final Options options = new Options();
 		options.addOption(new Option("r", "right", true,
 				"Right-hand output BlobStore filepath (required)"));
 		options.addOption(new Option("l", "left", true,
@@ -135,12 +137,12 @@ public class FSBlobStoreSplitter {
 		options.addOption(new Option("h", "help", false,
 		"Get this help"));
 		
-		CommandLineParser parser = new GnuParser();
-		HelpFormatter formatter = new HelpFormatter();
+		final CommandLineParser parser = new GnuParser();
+		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
 		try {
 			cmd = parser.parse( options, args);
-		} catch (ParseException e1) {
+		} catch (final ParseException e1) {
 			System.out.println("Failed to parse options: ");
 			e1.printStackTrace();
 		}
@@ -166,30 +168,30 @@ public class FSBlobStoreSplitter {
 			System.exit(1);
 		}
 
-		String original_location = cmd.getOptionValue("o");
-		String left_location = cmd.getOptionValue("l");
-		String right_location = cmd.getOptionValue("r");
+		final String original_location = cmd.getOptionValue("o");
+		final String left_location = cmd.getOptionValue("l");
+		final String right_location = cmd.getOptionValue("r");
 
-		BlobStore fsoriginal = new FSBlobStore(URI.create("fsoriginal"),
+		final BlobStore fsoriginal = new FSBlobStore(URI.create("fsoriginal"),
 				new File(original_location));
-		BlobStore fsleft = new FSBlobStore(URI.create("fsleft"), new File(
+		final BlobStore fsleft = new FSBlobStore(URI.create("fsleft"), new File(
 				left_location));
-		BlobStore fsright = new FSBlobStore(URI.create("fsright"), new File(
+		final BlobStore fsright = new FSBlobStore(URI.create("fsright"), new File(
 				right_location));
 
-		IdMapper fileprefixmapper = new FilePrefixMapper();
+		final IdMapper fileprefixmapper = new FilePrefixMapper();
 
-		BlobStore original = new IdMappingBlobStore(URI.create("original"),
+		final BlobStore original = new IdMappingBlobStore(URI.create("original"),
 				fsoriginal, fileprefixmapper);
-		BlobStore left = new IdMappingBlobStore(URI.create("left"), fsleft,
+		final BlobStore left = new IdMappingBlobStore(URI.create("left"), fsleft,
 				fileprefixmapper);
-		BlobStore right = new IdMappingBlobStore(URI.create("right"), fsright,
+		final BlobStore right = new IdMappingBlobStore(URI.create("right"), fsright,
 				fileprefixmapper);
 
 		try {
 			new FSBlobStoreSplitter().new FSBlobStoreSplitterImpl(original,
 					left, right).split();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -1,7 +1,13 @@
 /**
  * 
  */
+
 package edu.virginia.lib.ole.akubra;
+
+import static com.google.common.collect.Iterators.concat;
+import static edu.virginia.lib.ole.akubra.Constants.CHUNK;
+import static java.lang.Short.parseShort;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,106 +21,100 @@ import org.akubraproject.UnsupportedIdException;
 import org.akubraproject.impl.AbstractBlobStoreConnection;
 import org.akubraproject.impl.StreamManager;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Iterators;
 
 /**
  * @author ajs6f
- * @version 1.0 
+ * @version 1.0
  */
 public class TwoStoreConnection extends AbstractBlobStoreConnection {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(TwoStoreConnection.class);
+    private static final Logger log = getLogger(TwoStoreConnection.class);
 
-	/**
-	 * {@link org.akubraproject.BlobStore} to which this connection belongs
-	 */
-	private TwoStore myowner;
-	
-	/**
-	 * a {@link org.akubraproject.BlobStoreConnection} for each side of the {@link TwoStore}
-	 */
-	private BlobStoreConnection right, left;
+    /**
+     * {@link org.akubraproject.BlobStore} to which this connection belongs
+     */
+    private final TwoStore parent;
 
-	/**
-	 * @param owner {@link org.akubraproject.BlobStore} to which this connection belongs
-	 * @param hints {@link Map} of hints for this connection which will be passed on to each side
-	 * @throws IOException
-	 * @throws UnsupportedOperationException
-	 */
+    /**
+     * a {@link org.akubraproject.BlobStoreConnection} for each side of the {@link TwoStore}
+     */
+    private final BlobStoreConnection right, left;
 
-	public TwoStoreConnection(BlobStore owner, Map<String, String> hints)
-			throws UnsupportedOperationException, IOException {
-		super(owner);
-		this.myowner = (TwoStore) owner;
-		this.left = myowner.getLeft().openConnection(null, hints);
-		this.right = myowner.getRight().openConnection(null, hints);
-	}
+    /**
+     * @param owner {@link org.akubraproject.BlobStore} to which this connection belongs
+     * @param hints {@link Map} of hints for this connection which will be passed on to each side
+     * @throws IOException
+     * @throws UnsupportedOperationException
+     */
 
-	/**
-	 * @param owner {@link org.akubraproject.BlobStore} to which this connection belongs
-	 * @param streamManager
-	 * @throws IOException
-	 * @throws UnsupportedOperationException
-	 */
-	public TwoStoreConnection(BlobStore owner, StreamManager streamManager)
-			throws UnsupportedOperationException, IOException {
-		super(owner, streamManager);
-		this.myowner = (TwoStore) owner;
-		this.left = myowner.getLeft().openConnection(null, null);
-		this.right = myowner.getRight().openConnection(null, null);
-	}
+    public TwoStoreConnection(final BlobStore p, final Map<String, String> hints)
+            throws UnsupportedOperationException, IOException {
+        super(p);
+        this.parent = (TwoStore) p;
+        this.left = parent.getLeft().openConnection(null, hints);
+        this.right = parent.getRight().openConnection(null, hints);
+    }
 
-	/** 
-	 * @see org.akubraproject.BlobStoreConnection#getBlob(java.net.URI, java.util.Map)
-	 */
-	public Blob getBlob(URI blobId, Map<String, String> hints)
-			throws IOException, UnsupportedIdException,
-			UnsupportedOperationException {
-		log.debug("Entering TwoStoreConnection.getBlob()");
-		String blobIdString = blobId.toString();
-		log.debug("Using blobIdString: " +blobIdString);
-		String newBlobIdString = blobIdString.substring(Constants.CHUNK+1);
-		log.debug("Using newBlobIdString: " +newBlobIdString);
-		Short front = Short.parseShort((blobIdString.substring(0, Constants.CHUNK)),
-				2);
-		log.debug("Using front: " +front);
-		URI newBlobId = URI.create(newBlobIdString);
+    /**
+     * @param owner {@link org.akubraproject.BlobStore} to which this connection belongs
+     * @param streamManager
+     * @throws IOException
+     * @throws UnsupportedOperationException
+     */
+    public TwoStoreConnection(final BlobStore p, final StreamManager streamManager)
+            throws UnsupportedOperationException, IOException {
+        super(p, streamManager);
+        this.parent = (TwoStore) p;
+        this.left = parent.getLeft().openConnection(null, null);
+        this.right = parent.getRight().openConnection(null, null);
+    }
 
-		if (front % 2 == 0) {
-			log.debug("Exiting TwoStoreConnection.getBlob() to the left");
-			return left.getBlob(newBlobId, hints);
-		} else {
-			log.debug("Exiting TwoStoreConnection.getBlob() to the right");
-			return right.getBlob(newBlobId, hints);
-		}
+    /**
+     * @see org.akubraproject.BlobStoreConnection#getBlob(java.net.URI, java.util.Map)
+     */
+    @Override
+    public Blob getBlob(final URI blobId, final Map<String, String> hints)
+            throws IOException, UnsupportedIdException,
+            UnsupportedOperationException {
+        log.trace("Entering TwoStoreConnection.getBlob()");
+        final String blobIdString = blobId.toString();
+        log.trace("Using blobIdString: " + blobIdString);
+        final String newBlobIdString = blobIdString.substring(CHUNK + 1);
+        log.trace("Using newBlobIdString: " + newBlobIdString);
+        final short front = parseShort((blobIdString.substring(0, CHUNK)),2);
+        log.trace("Using front: " + front);
+        final URI newBlobId = URI.create(newBlobIdString);
 
-	}
+        if (front % 2 == 0) {
+            log.trace("Exiting TwoStoreConnection.getBlob() to the left");
+            return left.getBlob(newBlobId, hints);
+        }
+        log.trace("Exiting TwoStoreConnection.getBlob() to the right");
+        return right.getBlob(newBlobId, hints);
+    }
 
-	/**
-	 *  @see org.akubraproject.BlobStoreConnection#listBlobIds(java.lang.String)
-	 */
-	public Iterator<URI> listBlobIds(String filterPrefix) throws IOException {
-		Iterator<URI> leftiter = left.listBlobIds(filterPrefix);
-		Iterator<URI> rightiter = right.listBlobIds(filterPrefix);
-		return Iterators.concat(leftiter, rightiter);
-	}
+    /**
+     * @see org.akubraproject.BlobStoreConnection#listBlobIds(java.lang.String)
+     */
+    @Override
+    public Iterator<URI> listBlobIds(final String filterPrefix) throws IOException {
+        return concat(left.listBlobIds(filterPrefix), right.listBlobIds(filterPrefix));
+    }
 
-	/**
-	 * @see org.akubraproject.BlobStoreConnection#sync()
-	 */
-	public void sync() throws IOException, UnsupportedOperationException {
-		left.sync();
-		right.sync();
-	}
+    /**
+     * @see org.akubraproject.BlobStoreConnection#sync()
+     */
+    @Override
+    public void sync() throws IOException, UnsupportedOperationException {
+        left.sync();
+        right.sync();
+    }
 
-	@Override
-	public void close() {
-		left.close();
-		right.close();
-		closed = true;
-	}
+    @Override
+    public void close() {
+        left.close();
+        right.close();
+        closed = true;
+    }
 
 }

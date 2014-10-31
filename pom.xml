@@ -1,27 +1,32 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<prerequisites>
+		<maven>3.0.0</maven>
+	</prerequisites>
 	<groupId>edu.virginia.lib.ole.akubra</groupId>
-	<artifactId>TwoStore</artifactId>
+	<artifactId>twostore</artifactId>
 	<version>1.0</version>
-	<name>BlobStore to multiplex two stores.</name>
-	<description>Akubra BlobStore to multiplex two stores.</description>
+	<name>TwoStore</name>
+	<description>Akubra implementation to multiplex stores into a tree.</description>
 	<url>https://github.com/uvalib/twostore</url>
+
 	<organization>
-		<name>the University of Virginia Library :: OLE</name>
+		<name>the University of Virginia Library</name>
 		<url>http://www.lib.virginia.edu</url>
 	</organization>
+
 	<developers>
 		<developer>
 			<id>ajs6f</id>
 			<name>A. Soroka</name>
 			<email>ajs6f@virginia.edu</email>
 			<roles>
-				<role>Lead Developer</role>
+				<role>Developer</role>
 			</roles>
 		</developer>
 	</developers>
+
 	<contributors>
 		<contributor>
 			<name>Tim Stevens</name>
@@ -31,78 +36,56 @@
 			</roles>
 		</contributor>
 	</contributors>
-	
+
+	<properties>
+		<java.version>1.7</java.version>
+		<akubra.version>0.4.0</akubra.version>
+		<slf4j.version>1.7.7</slf4j.version>
+		<logback.version>1.1.2</logback.version>
+	</properties>
+
 	<licenses>
 		<license>
 			<name>Apache 2</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
-	
-	<ciManagement>
-		<url>http://hudson01.lib.virginia.edu:8080/jenkins/job/Repository_Infrastructure---Storage---TwoStore</url>
-	</ciManagement>
-	<scm>
-		<url>https://github.com/uvalib/twostore</url>
-	</scm>
-	<issueManagement>
-		<system>Jira</system>
-		<url>https://shibsp.itc.virginia.edu/jira/secure/IssueNavigator.jspa?pid=10070&amp;component=10090</url>
-	</issueManagement>
+
 	<distributionManagement>
 		<downloadUrl>http://uvalib.github.com/twostore/download.html</downloadUrl>
 	</distributionManagement>
 
-	<repositories>
-		<repository>
-			<releases>
-				<updatePolicy>always</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>Maven Central</id>
-			<name>Maven Central</name>
-			<url>http://repo1.maven.org/maven2/</url>
-		</repository>
-	</repositories>
-		
 	<pluginRepositories>
-  		<pluginRepository>
-		    <id>oss-sonatype-snapshots</id>
-		    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-	  	</pluginRepository>
+		<pluginRepository>
+			<id>oss-sonatype-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</pluginRepository>
 	</pluginRepositories>
 
 	<dependencies>
-	
+
 		<!-- core dependencies -->
 		<dependency>
 			<groupId>org.akubraproject</groupId>
 			<artifactId>akubra-core</artifactId>
-			<version>0.3</version>
-			<scope>compile</scope>
+			<version>${akubra.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.akubraproject</groupId>
 			<artifactId>akubra-map</artifactId>
-			<version>0.3</version>
-			<scope>compile</scope>
+			<version>${akubra.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
-			<artifactId>guava-collections</artifactId>
-			<version>r03</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
 		</dependency>
-		
+
 		<!-- dependencies for FSBlobStore splitter utility -->
 		<dependency>
 			<groupId>org.akubraproject</groupId>
 			<artifactId>akubra-fs</artifactId>
-			<version>0.3</version>
-			<scope>compile</scope>
+			<version>${akubra.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>
@@ -112,24 +95,22 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.0.1</version>
+			<version>2.4</version>
 		</dependency>
-		
+
 		<!-- logging dependencies -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.6.2</version>
+			<version>${slf4j.version}</version>
 		</dependency>
-		<!--  required for logging into Fedora -->
+		<!-- required for logging into Fedora -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.5.10</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<version>${slf4j.version}</version>
 		</dependency>
-		
+
 		<!-- testing dependencies -->
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -138,23 +119,18 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava-io</artifactId>
-			<version>r03</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-nop</artifactId>
-			<version>1.6.2</version>
-			<scope>test</scope>
-		</dependency>
-		
+
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
-				<!-- creates an executable jar with both the TwoStore library code and the splitter utility -->
+				<!-- creates an executable jar with both the TwoStore library code and 
+					the splitter utility -->
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
@@ -170,28 +146,34 @@
 					</descriptorRefs>
 				</configuration>
 				<executions>
-		          <execution>
-		            <id>make-assembly</id> <!-- this is used for inheritance merges -->
-		            <phase>package</phase> <!-- bind to the package phase -->
-		            <goals>
-		              <goal>single</goal>
-		            </goals>
-		          </execution>
-		        </executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the package phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerArgs>
+						<compilerArg>-Xlint:unchecked</compilerArg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.1</version>
+			</plugin>
+			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.8</version>
+				<version>2.9.1</version>
 				<configuration>
 					<detectLinks>true</detectLinks>
 				</configuration>
@@ -215,85 +197,51 @@
 			</plugin>
 			<!-- upload autogenerated Maven site to Github -->
 			<plugin>
-		      <groupId>com.github.github</groupId>
-		      <artifactId>site-maven-plugin</artifactId>
-		      <version>0.2</version>
-		      <configuration>
-		        <message>Creating site for ${project.version}</message>
-		        <password>M0nk3ybuTT</password>
-		        <userName>lib-ole-ci</userName>
-		      </configuration>
-		      <executions>
-		        <execution>
-		          <goals>
-		            <goal>site</goal>
-		          </goals>
-		          <phase>site</phase>
-		        </execution>
-		      </executions>
-		    </plugin>
-		    <!-- upload jar files to Github as well -->
-		    <plugin>
-		      <groupId>com.github.github</groupId>
-		      <artifactId>downloads-maven-plugin</artifactId>
-		      <version>0.2</version>
-		      <configuration>
-		        <description>${project.version} release of ${project.name}</description>
-		        <override>true</override>
-		        <includeAttached>true</includeAttached>
-		        <password>M0nk3ybuTT</password>
-		        <userName>lib-ole-ci</userName>
-		      </configuration>
-		      <executions>
-				  <execution>
-				    <goals>
-				      <goal>upload</goal>
-				    </goals>
-				    <phase>site</phase>
-				  </execution>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>10</version>
+				<configuration>
+					<message>Creating site for ${project.version}</message>
+					<password>M0nk3ybuTT</password>
+					<userName>lib-ole-ci</userName>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>site</phase>
+					</execution>
 				</executions>
-		    </plugin>
-		    <!-- establish the autogenerated Maven site -->
-		    <plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-site-plugin</artifactId>
-		        <version>3.0</version>
-		        <configuration>
-				    <reportPlugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-surefire-report-plugin</artifactId>
-							<version>2.9</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-javadoc-plugin</artifactId>
-							<version>2.8</version>
-							<configuration>
-								<detectLinks>true</detectLinks>
-							</configuration>
-						</plugin>
+			</plugin>
+			<!-- establish the autogenerated Maven site -->
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<reportPlugins>
+
 						<!-- add xreferenced source pages -->
 						<plugin>
-					        <groupId>org.apache.maven.plugins</groupId>
-					        <artifactId>maven-jxr-plugin</artifactId>
-					        <version>2.3</version>
-					     </plugin>
-					     <!-- add generic project info to site -->
-					     <plugin>
-					        <groupId>org.apache.maven.plugins</groupId>
-					        <artifactId>maven-project-info-reports-plugin</artifactId>
-					        <version>2.4</version>
-					        <configuration>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jxr-plugin</artifactId>
+							<version>2.3</version>
+						</plugin>
+						<!-- add generic project info to site -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>2.4</version>
+							<configuration>
 								<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
 								<dependencyLocationsEnabled>true</dependencyLocationsEnabled>
 							</configuration>
-					      </plugin>
-					      <plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-checkstyle-plugin</artifactId>
-								<version>2.7</version>
-						  </plugin>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-checkstyle-plugin</artifactId>
+							<version>2.7</version>
+						</plugin>
 					</reportPlugins>
 				</configuration>
 			</plugin>

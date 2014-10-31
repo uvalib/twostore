@@ -1,5 +1,7 @@
 package edu.virginia.lib.ole.akubra;
 
+import static java.net.URI.create;
+
 import java.net.URI;
 
 import org.akubraproject.map.IdMapper;
@@ -19,8 +21,8 @@ public class FilePrefixMapper implements IdMapper {
 	 * @see org.akubraproject.map.IdMapper#getExternalId(java.net.URI)
 	 */
 	@Override
-	public URI getExternalId(URI internalId) throws NullPointerException {
-		return URI.create(internalId.toString().substring(getInternalPrefix("").length()));
+	public URI getExternalId(final URI internalId) throws NullPointerException {
+        return create(internalId.toString().substring(getInternalPrefix("").length()));
 	}
 	
 	/**
@@ -29,8 +31,8 @@ public class FilePrefixMapper implements IdMapper {
 	 * @see org.akubraproject.map.IdMapper#getInternalId(java.net.URI)
 	 */
 	@Override
-	public URI getInternalId(URI externalId) throws NullPointerException {
-		return URI.create(getInternalPrefix("") + externalId.toString());
+	public URI getInternalId(final URI externalId) throws NullPointerException {
+		return create(getInternalPrefix("") + externalId.toString());
 	}
 	
 	/** 
@@ -39,7 +41,7 @@ public class FilePrefixMapper implements IdMapper {
 	 * @see org.akubraproject.map.IdMapper#getInternalPrefix(java.lang.String)
 	 */
 	@Override
-	public String getInternalPrefix(String externalPrefix)
+	public String getInternalPrefix(final String externalPrefix)
 			throws NullPointerException {
 		return prefix;
 	}
