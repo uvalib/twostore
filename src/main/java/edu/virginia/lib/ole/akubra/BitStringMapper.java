@@ -47,7 +47,7 @@ public class BitStringMapper implements IdMapper {
      * @see org.akubraproject.map.IdMapper#getInternalId(java.net.URI)
      */
     @Override
-    public URI getInternalId(final URI externalId) throws NullPointerException {
+    public URI getInternalId(final URI externalId) {
         log.trace("Entering BitStringMapper.getInternalId()");
         String characters = "";
         try {
@@ -64,7 +64,7 @@ public class BitStringMapper implements IdMapper {
             path.append(section);
         }
         final String uristring = path.toString() + characters;
-        log.trace("Exiting BitStringMapper.getInternalId() with: " + uristring);
+        log.trace("Exiting BitStringMapper.getInternalId() with: {}", uristring);
         return create(uristring);
     }
 
@@ -74,15 +74,14 @@ public class BitStringMapper implements IdMapper {
      * @see org.akubraproject.map.IdMapper#getInternalPrefix(java.lang.String)
      */
     @Override
-    public String getInternalPrefix(final String externalPrefix)
-            throws NullPointerException {
+    public String getInternalPrefix(final String externalPrefix) {
         return "";
     }
 
     /**
      * @param {@link String} characters
      * @return {@link Long} Adler32 hash of input
-     * @see Adler32
+     * @see java.util.zip.Adler32.Adler32()
      */
     private static long hash(final String characters) {
         final Adler32 hasher = new Adler32();

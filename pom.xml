@@ -12,7 +12,7 @@
 	<url>https://github.com/uvalib/twostore</url>
 
 	<organization>
-		<name>the University of Virginia Library</name>
+		<name>University of Virginia Library</name>
 		<url>http://www.lib.virginia.edu</url>
 	</organization>
 
@@ -21,9 +21,6 @@
 			<id>ajs6f</id>
 			<name>A. Soroka</name>
 			<email>ajs6f@virginia.edu</email>
-			<roles>
-				<role>Developer</role>
-			</roles>
 		</developer>
 	</developers>
 
@@ -31,9 +28,6 @@
 		<contributor>
 			<name>Tim Stevens</name>
 			<email>tss6n@virginia.edu</email>
-			<roles>
-				<role>Systems Engineer</role>
-			</roles>
 		</contributor>
 	</contributors>
 
@@ -50,10 +44,6 @@
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
-
-	<distributionManagement>
-		<downloadUrl>http://uvalib.github.com/twostore/download.html</downloadUrl>
-	</distributionManagement>
 
 	<pluginRepositories>
 		<pluginRepository>
@@ -92,11 +82,6 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.2</version>
 		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
-		</dependency>
 
 		<!-- logging dependencies -->
 		<dependency>
@@ -104,7 +89,6 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-		<!-- required for logging into Fedora -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
@@ -113,9 +97,9 @@
 
 		<!-- testing dependencies -->
 		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>6.2.1</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.9</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
