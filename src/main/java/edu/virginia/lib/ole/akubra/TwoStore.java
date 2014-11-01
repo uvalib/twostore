@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.transaction.Transaction;
 
 import org.akubraproject.BlobStore;
-import org.akubraproject.BlobStoreConnection;
 import org.akubraproject.impl.AbstractBlobStore;
 
 /**
@@ -38,7 +37,7 @@ public class TwoStore extends AbstractBlobStore {
      * @see org.akubraproject.BlobStore#openConnection(javax.transaction.Transaction, java.util.Map)
      */
     @Override
-    public BlobStoreConnection openConnection(final Transaction tx, final Map<String, String> hints)
+    public TwoStoreConnection openConnection(final Transaction tx, final Map<String, String> hints)
             throws IOException {
         return new TwoStoreConnection(this, hints);
     }

@@ -10,6 +10,7 @@ import static java.lang.Short.parseShort;
 import static java.net.URI.create;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
@@ -26,7 +27,7 @@ import org.slf4j.Logger;
  * @author ajs6f
  * @version 1.0
  */
-public class TwoStoreConnection extends AbstractBlobStoreConnection {
+public class TwoStoreConnection extends AbstractBlobStoreConnection implements Closeable {
 
     private static final Logger log = getLogger(TwoStoreConnection.class);
 

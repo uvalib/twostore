@@ -1,0 +1,86 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean name="dataStore" class="org.akubraproject.map.IdMappingBlobStore">
+        <description>A mapping store to use for datastreams.</description>
+        <qualifier type="edu.virginia.lib.ole.akubra.integration.MappedStore"/>
+        <constructor-arg value="urn:dataStore">
+            <description>The URI by which to address this BlobStore</description>
+        </constructor-arg>
+        <constructor-arg ref="dataStore1">
+            <description>The underlying BlobStore to which to map this IdMappingBlobStore. This one is a TwoStore,
+                declared below.</description>
+        </constructor-arg>
+        <constructor-arg ref="storeMapper">
+            <description>The ID mapper to use. This one (declared below) maps URIs to hashed URIs for use with
+                TwoStore.</description>
+        </constructor-arg>
+    </bean>
+
+    <bean name="dataStore1" class="edu.virginia.lib.ole.akubra.TwoStore">
+        <description>A multiplexing store to use for datastreams.</description>
+        <constructor-arg value="urn:dataStore1">
+            <description>The URI by which to address this BlobStore</description>
+        </constructor-arg>
+        <constructor-arg ref="dataStore2">
+            <description>The "left-hand" BlobStore being multiplexed. This one is a IdMapping store declared
+                below.</description>
+        </constructor-arg>
+        <constructor-arg ref="dataStore3">
+            <description>The "right-hand" BlobStore being multiplexed. This one is a IdMapping store declared
+                below.</description>
+        </constructor-arg>
+    </bean>
+
+    <bean name="dataStore2" class="org.akubraproject.map.IdMappingBlobStore">
+        <description>A mapping store to use for datastreams.</description>
+        <qualifier type="edu.virginia.lib.ole.akubra.integration.Left"/>
+        <constructor-arg value="urn:dataStore2">
+            <description>The URI by which to address this BlobStore</description>
+        </constructor-arg>
+        <constructor-arg ref="memDataStore1">
+            <description>The underlying BlobStore to which to map this IdMappingBlobStore. This one is a concrete
+                FSBlobStore, declared below.</description>
+        </constructor-arg>
+        <constructor-arg ref="filePrefixMapper">
+            <description>The ID mapper to use. This one (declared below) simply adds or subtracts the prefix
+                "file:".</description>
+        </constructor-arg>
+    </bean>
+
+    <bean name="dataStore3" class="org.akubraproject.map.IdMappingBlobStore">
+        <description>A mapping store to use for datastreams.</description>
+        <qualifier type="edu.virginia.lib.ole.akubra.integration.Right"/>
+        <constructor-arg value="urn:dataStore3">
+            <description>The URI by which to address this BlobStore</description>
+        </constructor-arg>
+        <constructor-arg ref="memDataStore2">
+            <description>The underlying BlobStore to which to map this IdMappingBlobStore. This one is a concrete
+                FSBlobStore, declared below.</description>
+        </constructor-arg>
+        <constructor-arg ref="filePrefixMapper">
+            <description>The ID mapper to use. This one (declared below) simply adds or subtracts the prefix
+                "file:".</description>
+        </constructor-arg>
+    </bean>
+
+    <bean name="storeMapper" class="edu.virginia.lib.ole.akubra.BitStringMapper">
+        <description>An IDMapper that takes URIs and maps to hashes that are returned as binary strings for use with
+            TwoStore.</description>
+    </bean>
+
+    <bean name="filePrefixMapper" class="edu.virginia.lib.ole.akubra.FilePrefixMapper">
+        <description>An IDMapper that simply adds or subtracts the prefix "file:" for use with
+            FSBlobStores.</description>
+    </bean>
+
+    <bean name="memDataStore1" class="org.akubraproject.mem.MemBlobStore">
+        <description>A concrete BlobStore.</description>
+    </bean>
+
+    <bean name="memDataStore2" class="org.akubraproject.mem.MemBlobStore">
+        <description>A concrete BlobStore.</description>
+    </bean>
+
+</beans>
