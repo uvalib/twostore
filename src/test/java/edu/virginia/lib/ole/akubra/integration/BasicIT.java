@@ -37,8 +37,8 @@ import edu.virginia.lib.ole.akubra.TwoStore;
 public class BasicIT {
 
     private static final Logger log = getLogger(BasicIT.class);
-    
-    private static final int NUMTESTBLOBS = 1000;
+
+    private static final int NUMBER_OF_TEST_BLOBS = 1000;
 
     @Inject
     private TwoStore testTwoStore;
@@ -61,14 +61,17 @@ public class BasicIT {
 
     static {
         log.debug("Generating test data...");
-        for (int i = 0; i < NUMTESTBLOBS; i++) {
-            final URI blobId = create(randomUUID().toString());
+        for (int i = 0; i < NUMBER_OF_TEST_BLOBS; i++) {
+            final URI blobId = create(randomUriString());
             final String testDataValue = randomUUID().toString();
             testData.put(blobId, testDataValue);
         }
         log.debug("Generated test data.");
     }
 
+    private static String randomUriString() {
+        return randomUUID().toString() + randomUUID().toString() + randomUUID().toString();
+    }
 
     @Before
     public void setUp() throws IOException {
