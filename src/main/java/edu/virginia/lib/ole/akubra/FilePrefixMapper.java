@@ -5,30 +5,32 @@ import static java.net.URI.create;
 
 import java.net.URI;
 
-import org.akubraproject.map.IdMapper;
-
 /**
  * @author ajs6f
  * @version 1.0
  * @see org.akubraproject.map.IdMapper
  */
-public class FilePrefixMapper implements IdMapper {
+public class FilePrefixMapper extends AbstractIdMapper {
 
     private final static String prefix = "file:";
 
     /**
      * @see org.akubraproject.map.IdMapper#getExternalId(java.net.URI)
+     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper.getExternalId(java.net.URI)
+     * @see com.google.common.base.Converter#doBackward(java.lang.Object)
      */
     @Override
-    public URI getExternalId(final URI internalId) {
+    public URI doBackward(final URI internalId) {
         return create(internalId.toString().substring(getInternalPrefix("").length()));
     }
 
     /**
      * @see org.akubraproject.map.IdMapper#getInternalId(java.net.URI)
+     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper.getInternalId(java.net.URI)
+     * @see com.google.common.base.Converter#doForward(java.lang.Object)
      */
     @Override
-    public URI getInternalId(final URI externalId) {
+    public URI doForward(final URI externalId) {
         return create(getInternalPrefix("") + externalId);
     }
 

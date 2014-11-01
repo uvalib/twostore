@@ -16,7 +16,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.zip.Adler32;
 
-import org.akubraproject.map.IdMapper;
 import org.slf4j.Logger;
 
 /**
@@ -24,30 +23,17 @@ import org.slf4j.Logger;
  * @version 1.0
  * @see org.akubraproject.map.IdMapper
  */
-public class BitStringMapper implements IdMapper {
+public class BitStringMapper extends AbstractIdMapper {
 
     private static final Logger log = getLogger(BitStringMapper.class);
 
     /**
-     * @see org.akubraproject.map.IdMapper#getExternalId(java.net.URI)
-     */
-    @Override
-    public URI getExternalId(final URI internalId) {
-        final String uriandpath = internalId.toString();
-        try {
-            final String uri = decode(uriandpath.substring(uriandpath.lastIndexOf('/') + 1), UTF_8.toString());
-            return create(uri);
-        } catch (final UnsupportedEncodingException e) {
-            throw new AssertionError(e);
-        }
-
-    }
-
-    /**
      * @see org.akubraproject.map.IdMapper#getInternalId(java.net.URI)
+     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper.getInternalId(java.net.URI)
+     * @see com.google.common.base.Converter#doForward(java.lang.Object)
      */
     @Override
-    public URI getInternalId(final URI externalId) {
+    public URI doForward(final URI externalId) {
         log.trace("Entering BitStringMapper.getInternalId()");
         String characters = "";
         try {
@@ -67,15 +53,21 @@ public class BitStringMapper implements IdMapper {
         log.trace("Exiting BitStringMapper.getInternalId() with: {}", uristring);
         return create(uristring);
     }
-
+    
     /**
-     * @param externalPrefix ignored
-     * @return always returns empty string, since there is no defined prefix for this mapper
-     * @see org.akubraproject.map.IdMapper#getInternalPrefix(java.lang.String)
+     * @see org.akubraproject.map.IdMapper#getExternalId(java.net.URI)
+     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper.getExternalId(java.net.URI)
+     * @see com.google.common.base.Converter#doBackward(java.lang.Object)
      */
     @Override
-    public String getInternalPrefix(final String externalPrefix) {
-        return "";
+    public URI doBackward(final URI internalId) {
+        final String uriandpath = internalId.toString();
+        try {
+            final String uri = decode(uriandpath.substring(uriandpath.lastIndexOf('/') + 1), UTF_8.toString());
+            return create(uri);
+        } catch (final UnsupportedEncodingException e) {
+            throw new AssertionError(e);
+        }
     }
 
     /**
@@ -89,5 +81,4 @@ public class BitStringMapper implements IdMapper {
         hasher.update(characters.getBytes());
         return hasher.getValue();
     }
-
 }

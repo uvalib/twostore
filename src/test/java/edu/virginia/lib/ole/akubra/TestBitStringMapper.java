@@ -6,21 +6,15 @@ import static org.junit.Assert.assertEquals;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.akubraproject.map.IdMapper;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestBitStringMapper {
+public class TestBitStringMapper extends AbstractIdMapperTestFrame<BitStringMapper> {
 
     private final Logger log = LoggerFactory.getLogger(TestBitStringMapper.class);
 
-    private final IdMapper mapper = new BitStringMapper();
-
-    @Test
-    public void testGetInternalPrefix() {
-        assertEquals(mapper.getInternalPrefix(""), "");
-    }
+    private final BitStringMapper mapper = new BitStringMapper();
 
     @Test
     public void testGetInternalId() throws URISyntaxException {
@@ -44,5 +38,10 @@ public class TestBitStringMapper {
         log.debug("testexternal: " + testexternal);
         log.debug("External URI: " + internal.toString());
         assertEquals(internal.toString(), testexternal);
+    }
+
+    @Override
+    protected BitStringMapper getTestMapper() {
+        return mapper;
     }
 }
