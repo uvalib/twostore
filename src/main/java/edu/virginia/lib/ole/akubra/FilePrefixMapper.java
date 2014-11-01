@@ -16,17 +16,20 @@ public class FilePrefixMapper extends AbstractIdMapper {
 
     /**
      * @see org.akubraproject.map.IdMapper#getExternalId(java.net.URI)
-     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper.getExternalId(java.net.URI)
+     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper#getExternalId(java.net.URI)
      * @see com.google.common.base.Converter#doBackward(java.lang.Object)
      */
     @Override
     public URI doBackward(final URI internalId) {
-        return create(internalId.toString().substring(getInternalPrefix("").length()));
+        if (internalId.toString().startsWith(getInternalPrefix(""))) {
+            return create(internalId.toString().substring(getInternalPrefix("").length()));
+        }
+        return internalId;
     }
 
     /**
      * @see org.akubraproject.map.IdMapper#getInternalId(java.net.URI)
-     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper.getInternalId(java.net.URI)
+     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper#getInternalId(java.net.URI)
      * @see com.google.common.base.Converter#doForward(java.lang.Object)
      */
     @Override

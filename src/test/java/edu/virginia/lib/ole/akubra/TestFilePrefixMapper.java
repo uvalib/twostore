@@ -2,6 +2,7 @@
 package edu.virginia.lib.ole.akubra;
 
 import static java.net.URI.create;
+import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertEquals;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -45,6 +46,11 @@ public class TestFilePrefixMapper extends AbstractIdMapperTestFrame<FilePrefixMa
     @Override
     protected FilePrefixMapper getTestMapper() {
         return mapper;
+    }
+
+    @Override
+    protected URI createTestInternalUri() {
+        return create(prefix + randomUUID());
     }
 
 }

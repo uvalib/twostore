@@ -29,7 +29,7 @@ public class BitStringMapper extends AbstractIdMapper {
 
     /**
      * @see org.akubraproject.map.IdMapper#getInternalId(java.net.URI)
-     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper.getInternalId(java.net.URI)
+     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper#getInternalId(java.net.URI)
      * @see com.google.common.base.Converter#doForward(java.lang.Object)
      */
     @Override
@@ -53,10 +53,10 @@ public class BitStringMapper extends AbstractIdMapper {
         log.trace("Exiting BitStringMapper.getInternalId() with: {}", uristring);
         return create(uristring);
     }
-    
+
     /**
      * @see org.akubraproject.map.IdMapper#getExternalId(java.net.URI)
-     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper.getExternalId(java.net.URI)
+     * @see edu.virginia.lib.ole.akubra.AbstractIdMapper#getExternalId(java.net.URI)
      * @see com.google.common.base.Converter#doBackward(java.lang.Object)
      */
     @Override
@@ -71,9 +71,9 @@ public class BitStringMapper extends AbstractIdMapper {
     }
 
     /**
-     * @param {@link String} characters
-     * @return {@link Long} Adler32 hash of input
-     * @see java.util.zip.Adler32.Adler32()
+     * @param characters
+     * @return Adler32 hash of input
+     * @see java.util.zip.Adler32#Adler32()
      */
     private static long hash(final String characters) {
         final Adler32 hasher = new Adler32();
